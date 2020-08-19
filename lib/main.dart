@@ -28,12 +28,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController usert = TextEditingController();
-  TextEditingController passt = TextEditingController();
-  String mensaje = "";
-  String usuario = "";
-  bool loggin = false;
   SharedPreferences sharedPreferences;
+  String mensaje = "";
 
   logg() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -46,8 +42,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    //logg();
+    logg();
   }
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -74,14 +71,6 @@ class _HomeState extends State<Home> {
         );
       },
     );
-  }
-
-  vefificarT() {
-    if (usert.text == "" || passt.text == "") {
-      mensaje = "Introducir los datos";
-      return false;
-    }
-    return true;
   }
 
   @override
