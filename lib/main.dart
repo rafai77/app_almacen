@@ -1,8 +1,8 @@
 import 'package:app_almacen/pages/Homepage.dart';
 import 'package:app_almacen/pages/LoginPage.dart';
 import 'package:flutter/material.dart';
-//import 'package:http/http.dart' as http;
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(Almacenapp());
@@ -28,9 +28,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //SharedPreferences sharedPreferences;
+  TextEditingController usert = TextEditingController();
+  TextEditingController passt = TextEditingController();
+  String mensaje = "";
+  String usuario = "";
+  bool loggin = false;
+  SharedPreferences sharedPreferences;
 
-  /*logg() async {
+  logg() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.getString("tk") == null) {
       Navigator.of(context).pushAndRemoveUntil(
@@ -38,10 +43,45 @@ class _HomeState extends State<Home> {
           (Route<dynamic> router) => false);
     }
   }
-*/
+
   @override
   void initState() {
     //logg();
+  }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("ERROR"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('ERROR.'),
+                Text(mensaje),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  vefificarT() {
+    if (usert.text == "" || passt.text == "") {
+      mensaje = "Introducir los datos";
+      return false;
+    }
+    return true;
   }
 
   @override
