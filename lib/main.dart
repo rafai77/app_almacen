@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext contex) => LoginPage()),
           (Route<dynamic> router) => false);
-    }
+    } else {}
   }
 
   @override
@@ -75,11 +75,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('Almacen H-Cimarron'), backgroundColor: Colors.indigo),
-      body: Homepage(),
-    );
+    return Homepage();
   }
 }
 //(title: 'Almacen H-Cimarron'

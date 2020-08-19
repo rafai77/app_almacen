@@ -56,13 +56,12 @@ class _LoginPageState extends State<LoginPage> {
       }
       //se pudo iniciar
       var data = json.decode(response.body);
-      print(data['log']);
       if (data['log'] == true) {
         print("Ingreso");
         sharedPreferences.setInt("id", data['user']['id_user']);
         sharedPreferences.setString("rol", data['user']['rol']);
-        sharedPreferences.setString("rol", data['user']['nombre']);
-        sharedPreferences.setString("tk", data['user']['token']);
+        sharedPreferences.setString("nombre", data['user']['nombre']);
+        sharedPreferences.setString("tk", data['token']);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext contex) => Homepage()),
             (Route<dynamic> router) => false);
@@ -71,12 +70,6 @@ class _LoginPageState extends State<LoginPage> {
           loggin = false;
         });
       }
-      setState(() {
-        mensaje = "Usuario o contraseña mal";
-        _showMyDialog();
-        loggin = false;
-      });
-      print(data);
     } else {
       print("datos mal ");
       setState(() {
