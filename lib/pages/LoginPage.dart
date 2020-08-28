@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:app_almacen/Constantes/Constantesback.dart';
+import 'package:app_almacen/main.dart';
 import 'package:app_almacen/pages/Homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         response = await http
             .post(Constant.DOMAIN + "/log/", body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 15));
       } on TimeoutException catch (_) {
         loggin = false;
         setState(() {
@@ -45,13 +46,16 @@ class _LoginPageState extends State<LoginPage> {
         });
         throw ('Sin conexion al servidor');
       } on SocketException {
+        loggin = false;
         setState(() {
           loggin = false;
           throw ('Sin internet  o falla de servidor ');
         });
       } on HttpException {
+        loggin = false;
         throw ("No se encontro esa peticion");
       } on FormatException {
+        loggin = false;
         throw ("Formato erroneo ");
       }
       //se pudo iniciar
@@ -62,8 +66,9 @@ class _LoginPageState extends State<LoginPage> {
         sharedPreferences.setString("rol", data['user']['rol']);
         sharedPreferences.setString("nombre", data['user']['nombre']);
         sharedPreferences.setString("tk", data['token']);
+        //aqui debe ir el enrutamiento para cada usuario
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext contex) => Homepage()),
+            MaterialPageRoute(builder: (BuildContext contex) => Home()),
             (Route<dynamic> router) => false);
       } else {
         setState(() {
@@ -209,8 +214,6 @@ class _LoginPageState extends State<LoginPage> {
                                   loggin = true;
                                   login();
                                 });
-
-                                //login();
                               },
                             ),
                           ),

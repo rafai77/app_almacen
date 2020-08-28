@@ -75,7 +75,27 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Homepage();
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.indigo,
+          title: Center(
+            child: Text("Almacen "),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                sharedPreferences.clear();
+                sharedPreferences.commit();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (BuildContext contex) => LoginPage()),
+                    (Route<dynamic> router) => false);
+              },
+              child: Icon(Icons.exit_to_app),
+            )
+          ],
+        ),
+        body: Homepage());
   }
 }
 //(title: 'Almacen H-Cimarron'
