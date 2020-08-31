@@ -12,24 +12,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class Tabla extends StatefulWidget {
   String nombre;
   String invernadero;
   String planta;
   Colors color;
+  String cm;
 
-  Tabla(
-    this.nombre,
-    this.invernadero,
-    this.planta,
-  );
+  Tabla(this.nombre, this.invernadero, this.planta, this.cm);
   @override
-  _TablaState createState() => _TablaState(
-        nombre,
-        invernadero,
-        planta,
-      );
+  _TablaState createState() => _TablaState(nombre, invernadero, planta, cm);
 }
 
 class _TablaState extends State<Tabla> {
@@ -41,6 +35,10 @@ class _TablaState extends State<Tabla> {
   List<Productos> listaproduc = List<Productos>();
   bool conexion = false;
   bool carga = true;
+  List<charts.Series> charproduc;
+  String cm;
+  String tipo = "ls";
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -69,7 +67,7 @@ class _TablaState extends State<Tabla> {
     );
   }
 
-  _TablaState(this.nombre, this.invernadero, this.planta);
+  _TablaState(this.nombre, this.invernadero, this.planta, this.cm);
   @override
   void initState() {
     obtener();
@@ -77,6 +75,12 @@ class _TablaState extends State<Tabla> {
       if (!listaproduc.isEmpty) carga = false;
     });
     super.initState();
+  }
+
+  Future<Null> createchart() async {
+    for (var i in listaproduc) {
+      // charproduc.add(Sales(i.producto, i.total));
+    }
   }
 
   Future<Null> obtener() async {
@@ -89,8 +93,8 @@ class _TablaState extends State<Tabla> {
       var hd = {'vefificador': sharedPreferences.getString('tk')};
       var body = {
         // cambiar tabla por algo dinamico
-        'tabla': "inventario",
-        'tipo': 'ls'
+        'tabla': cm,
+        'tipo': tipo
       };
       response = await http.post(EndPoints.datos, headers: hd, body: body);
       // try {
@@ -106,6 +110,7 @@ class _TablaState extends State<Tabla> {
       //   setState(() {
       //     throw ('Sin internet  o falla de servidor ');
       //   });
+
       // } on HttpException {
       //   throw ("No se encontro esa peticion");
       // } on FormatException {
@@ -132,49 +137,131 @@ class _TablaState extends State<Tabla> {
     }
   }
 
+  all() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Center(
+              child: Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text("Liquidos"),
+                color: Colors.green,
+                splashColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                onPressed: () {
+                  setState(() {
+                    tipo = "Liquido";
+                    obtener();
+                  });
+                },
+              ),
+              RaisedButton(
+                child: Text("Solidos"),
+                color: Colors.green,
+                splashColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                onPressed: () {
+                  setState(() {
+                    tipo = "Solido";
+                    obtener();
+                  });
+                },
+              ),
+              RaisedButton(
+                child: Text("Ambos"),
+                color: Colors.green,
+                splashColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                onPressed: () {
+                  setState(() {
+                    tipo = "ls";
+                    obtener();
+                  });
+                },
+              ),
+            ],
+          )),
+          table()
+        ],
+      ),
+    );
+  }
+
   table() {
     return Container(
-        width: MediaQuery.of(context).size.width * .9,
-        height: MediaQuery.of(context).size.height * .5,
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+        margin: EdgeInsets.all(25),
+        width: MediaQuery.of(context).size.width * 2,
+        height: MediaQuery.of(context).size.height * .75,
+        // padding: EdgeInsets.only(top: 5, left: 5),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 5,
+              ),
+            ]),
+        child: Container(
+            margin: EdgeInsets.all(6),
+            color: Colors.black45,
+            //width: MediaQuery.of(context).size.width * 2,
+            //height: MediaQuery.of(context).size.height * .75,
+
             child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                    columns: const <DataColumn>[
-                      DataColumn(
-                        label: Text(
-                          'Id_producto',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Producto',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Total',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'tipo',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Unidad',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                    ],
-                    rows: List.generate(listaproduc.length,
-                        (index) => _getDataRow(listaproduc[index]))))));
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                        dividerThickness: 2,
+                        dataRowHeight: 25,
+                        columnSpacing: 10,
+                        headingRowHeight: 45,
+                        horizontalMargin: 5,
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'Id_producto',
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            tooltip: "go",
+                            label: Text(
+                              'Producto',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Total',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'tipo',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Unidad',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ],
+                        rows: List.generate(listaproduc.length,
+                            (index) => _getDataRow(listaproduc[index])))))));
   }
 
   DataRow _getDataRow(result) {
@@ -199,7 +286,7 @@ class _TablaState extends State<Tabla> {
           actions: <Widget>[],
         ),
         body: Form(
-          child: carga ? Center(child: CircularProgressIndicator()) : table(),
+          child: carga ? Center(child: CircularProgressIndicator()) : all(),
         ));
     // child: Text("data"),
   }

@@ -173,10 +173,7 @@ class _HomepageState extends State<Homepage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Tabla(
-                                  "Almacen general",
-                                  "",
-                                  '',
-                                )));
+                                "Almacen general", "", '', "inventario")));
                   },
                 ),
               ),
@@ -185,10 +182,18 @@ class _HomepageState extends State<Homepage> {
               child: Card(
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
-                  child: targeta("Cuarto de maquinas 1-Pimiento", "(1,2,3,4)",
-                      "Pimiento", Colors.green),
+                  child: targeta(
+                    "Cuarto de maquinas 1-Pimiento",
+                    "(1,2,3,4)",
+                    "Pimiento",
+                    Colors.green,
+                  ),
                   onTap: () {
-                    print('Card tapped.2');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm1")));
                   },
                 ),
               ),
@@ -200,7 +205,11 @@ class _HomepageState extends State<Homepage> {
                   child: targeta("Cuarto de maquinas 2-3-Pimiento", "(5,6,7,8)",
                       "Pimiento", Colors.green),
                   onTap: () {
-                    print('Card tapped.3');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm2")));
                   },
                 ),
               ),
@@ -212,7 +221,27 @@ class _HomepageState extends State<Homepage> {
                   child: targeta("Cuarto de maquinas 4-Tomate", "(11,12)",
                       "Tomate", Colors.red),
                   onTap: () {
-                    print('Card tapped.3');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm4_t")));
+                  },
+                ),
+              ),
+            ),
+            Center(
+              child: Card(
+                child: InkWell(
+                  splashColor: Colors.blue.withAlpha(30),
+                  child: targeta("Cuarto de maquinas 4-Pmiento", "(11,12)",
+                      "Tomate", Colors.green),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm4_p")));
                   },
                 ),
               ),
@@ -224,7 +253,11 @@ class _HomepageState extends State<Homepage> {
                   child: targeta("Cuarto de maquinas 5-Tomate", "(13,14)",
                       "Tomate", Colors.red),
                   onTap: () {
-                    print('Card tapped.3');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm5")));
                   },
                 ),
               ),
@@ -233,10 +266,14 @@ class _HomepageState extends State<Homepage> {
               child: Card(
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
-                  child: targeta("Cuarto de maquinas 6-Tomate", "(17,18)",
+                  child: targeta("Cuarto de maquinas 6-Pimiento", "(17,18)",
                       "Tomate", Colors.green),
                   onTap: () {
-                    print('Card tapped.3');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm6_p")));
                   },
                 ),
               ),
@@ -248,7 +285,11 @@ class _HomepageState extends State<Homepage> {
                   child: targeta("Cuarto de maquinas 6-Tomate", "(15,16)",
                       "Tomate", Colors.red),
                   onTap: () {
-                    print('Card tapped.3');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Tabla("Almacen general", "", '', "cm6_t")));
                   },
                 ),
               ),
