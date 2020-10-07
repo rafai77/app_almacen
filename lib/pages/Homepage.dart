@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:app_almacen/Constantes/Constantesback.dart';
 import 'package:app_almacen/Constantes/EndPoints.dart';
 import 'package:app_almacen/Model/Productos.dart';
@@ -10,6 +10,7 @@ import 'package:app_almacen/pages/tabla.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,7 @@ class _HomepageState extends State<Homepage> {
   String mensaje = "";
   bool conexion = false;
   List<Productos> listaproduc = List<Productos>();
+  String result = "Sin datos";
 
   Future<void> _showMyDialog() async {
     return showDialog<void>(
@@ -300,12 +302,55 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  traspasos() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response;
+    print(sharedPreferences.getString('tk')); // 192.168.1.135
+    var hd = {'vefificador': sharedPreferences.getString('tk')};
+    var body = {
+      // cambiar tabla por algo dinamico
+      'datos': result,
+    };
+    response = await http.post(EndPoints.traspaso, headers: hd, body: body);
+    print(response);
+  }
+
+  Future<void> scanear() async {
+    try {
+      ScanResult barcode = (await BarcodeScanner.scan());
+      setState(() {
+        result = barcode.rawContent;
+        print(result);
+        traspasos();
+      });
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
+        setState(() {
+          result = 'El usuario no dio permiso para el uso de la cámara!';
+        });
+      } else {
+        setState(() => result = 'Error desconocido $e');
+      }
+    } on FormatException {
+      setState(() => result =
+          'nulo, el usuario presionó el botón de volver antes de escanear algo)');
+    } catch (e) {
+      setState(() => result = 'Error desconocido : $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          child: targetas(),
-        ));
+      color: Colors.white,
+      child: SingleChildScrollView(
+          child: Column(
+        children: [
+          targetas(),
+          FloatingActionButton(child: Icon(Icons.camera), onPressed: scanear),
+          Text(result),
+        ],
+      )),
+    );
   }
 }

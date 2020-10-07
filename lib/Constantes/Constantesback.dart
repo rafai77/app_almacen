@@ -1,5 +1,5 @@
 class Constant {
-  static const String DOMAIN = "http://192.168.1.155:3000";
+  static const String DOMAIN = "http://192.168.1.133:3000";
   static const String KEY =
       "CIMARR0N2020AB-98?-rterytreyudgfhnjdfgnxfgvnbdfgnhfgdnbgf";
   static const String KEY2 =

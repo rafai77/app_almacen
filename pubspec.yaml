@@ -26,6 +26,7 @@ dependencies:
   date_format: any
   path_provider: ^ 0.4.1 
   charts_flutter: ^0.9.0
+  barcode_scan: ^3.0.1
 
 
 
